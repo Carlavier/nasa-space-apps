@@ -1,19 +1,7 @@
 import { useEffect, useState } from 'react';
 import { ChevronUp, ChevronDown, ChevronLeft, ChevronRight, Target, ArrowLeft, Send, Play } from 'lucide-react';
 import { articles } from '../constants';
-import { generateResponse, similaritySearch } from '../services/ai/core';
-import LoadingSpinner from '../components/LoadingSpinner';
-
-const samplePaper = {
-    id: '1',
-    title: 'Quantum Propulsion Systems',
-    author: 'Dr. Elena Vasquez',
-    summary: 'Revolutionary approach to faster-than-light travel using quantum entanglement principles.',
-    date: '2089.03.15',
-    planetType: 'blue',
-    snippet: 'Our research demonstrates that by manipulating quantum entangled particles across vast distances, we can create a propulsion field that appears to violate traditional speed limitations. The key breakthrough involves maintaining quantum coherence at macroscopic scales through advanced cryogenic shielding and electromagnetic field manipulation.',
-    explanation: 'This experiment showcases a revolutionary quantum propulsion system that could fundamentally change space travel. By leveraging quantum entanglement - a phenomenon where particles remain connected regardless of distance - the researchers have created a propulsion mechanism that bypasses conventional thrust limitations. The video demonstration shows the quantum field generator maintaining stable entanglement at room temperature, a feat previously thought impossible.'
-};
+import { generateResponse } from '../services/ai/core';
 
 const pmcid = 'PMC4136787'; // Example PMCID for fetching paper data
 const article = articles['PMC4136787']; // Example PMCID for fetching paper data
@@ -40,13 +28,31 @@ const relatedPapers = [
 ];
 
 const sampleQuestions = [
-    'How does quantum entanglement work at this scale?',
-    'What are the energy requirements?',
-    'Could this be scaled for human travel?',
-    'What are the main challenges?'
+    'What is the main focus of this research?',
+    'How does this research impact the field?',
+    'What are the potential applications of this study?'
 ];
 
 export default function Paper() {
+    const [articleSnippet, setArticleSnippet] = useState("Loading...");
+    const [articleExplanation, setArticleExplanation] = useState("Loading...");
+    console.log(articleSnippet, articleExplanation);
+
+    useEffect(() => {
+        async function loadArticle() {
+            try {
+                const snippet = await generateResponse("Provide a concise snippet from the paper.", pmcid, 'terminology');
+                const explanation = await generateResponse("Explain the significance of this research in simple terms.", pmcid, 'terminology');
+                setArticleSnippet(snippet.definition);
+                setArticleExplanation(explanation.definition);
+            } catch (error) {
+                console.error("Error fetching article data:", error);
+            }
+        }
+
+        loadArticle();
+    }, []);
+
     const [activeControls] = useState({
         power: true,
         navigation: true,
@@ -63,7 +69,7 @@ export default function Paper() {
     });
     const [chatMessages, setChatMessages] = useState([{
         type: 'assistant',
-        text: `I'm your AI assistant. I can help explain the research on "${samplePaper.title}". Feel free to ask me anything!`
+        text: `I'm your AI assistant. I can help explain the research on "${article.title}". Feel free to ask me anything!`
     }]);
     const [chatInput, setChatInput] = useState('');
     const [hoveredPlanet, setHoveredPlanet] = useState(null);
@@ -178,7 +184,7 @@ export default function Paper() {
                                         onMouseEnter={() => setHoveredPlanet(paper.id)}
                                         onMouseLeave={() => setHoveredPlanet(null)}
                                     >
-                                        <div className={`w-16 h-16 rounded-full bg-gradient-to-br ${getPlanetColor(paper.planetType)} shadow-lg ${samplePaper.id === paper.id ? 'ring-4 ring-cyan-400 ring-opacity-50' : 'hover:scale-110'} transition-all duration-300`}></div>
+                                        <div className={`w-16 h-16 rounded-full bg-gradient-to-br ${getPlanetColor(paper.planetType)} shadow-lg ${article.id === paper.id ? 'ring-4 ring-cyan-400 ring-opacity-50' : 'hover:scale-110'} transition-all duration-300`}></div>
                                         <div className="absolute inset-0 rounded-full border-2 border-slate-500/30 animate-spin" style={{ animationDuration: '8s' }}></div>
 
                                         {/* Hover tooltip */}
@@ -199,10 +205,10 @@ export default function Paper() {
                 <div className="w-3/5 p-2 flex flex-col overflow-y-auto">
                     <div className="mb-2">
                         <h1 className="text-slate-100 text-xl font-bold mb-2">
-                            {samplePaper.title}
+                            {article.title}
                         </h1>
                         <p className="text-slate-400 text-sm">
-                            By {samplePaper.author} • {samplePaper.date}
+                            By {article.author} • {article.date}
                         </p>
                     </div>
 
@@ -230,7 +236,7 @@ export default function Paper() {
                         </h2>
                         <div className="bg-slate-900/80 border border-slate-700/50 rounded-xl p-2 shadow-inner">
                             <p className="text-slate-300 leading-relaxed text-left italic">
-                                {`"${samplePaper.snippet}"`}
+                                {`"${articleSnippet}"`}
                             </p>
                         </div>
                     </div>
@@ -244,7 +250,7 @@ export default function Paper() {
                             <div className="flex items-start space-x-3">
                                 <div className="w-2 h-2 rounded-full bg-cyan-400 mt-2 animate-pulse"></div>
                                 <p className="text-slate-300 leading-relaxed flex-1 text-left">
-                                    {samplePaper.explanation}
+                                    {articleExplanation}
                                 </p>
                             </div>
                         </div>
