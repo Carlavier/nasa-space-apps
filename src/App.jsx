@@ -3,10 +3,12 @@ import MainLayout from './layouts/MainLayout';
 import Home from './pages/Home';
 import Paper from './pages/Paper';
 import './App.css'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 function App() {
   return (
     <div className='p-0 m-0 w-screen h-screen'>
+        <QueryClientProvider client={new QueryClient()}>
       <Router>
         <Routes>
           <Route path="/" element={<MainLayout />}>
@@ -16,6 +18,7 @@ function App() {
           </Route>
         </Routes>
       </Router>
+        </QueryClientProvider>
     </div>
   )
 }

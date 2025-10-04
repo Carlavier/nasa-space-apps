@@ -1,5 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Search, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, Target } from 'lucide-react';
+import { similaritySearch } from '../services/ai/core';
+import { useQuery } from '@tanstack/react-query';
+import { debounce } from 'lodash';
 
 const samplePapers = [
   {
@@ -47,6 +50,26 @@ const hintQueries = [
 
 export default function SpaceshipInteriorNeumorphic() {
   const [searchQuery, setSearchQuery] = useState('');
+
+    const [debouncedQuery, setDebouncedQuery] = useState('');
+
+    useEffect(() => {
+        const handler = debounce((query) => {
+            setDebouncedQuery(query);
+        }, 500);
+
+        handler(searchQuery);
+
+        return () => {
+            handler.cancel();
+        };
+    }, [searchQuery]);
+
+    const { data } = useQuery({
+        queryKey: ['similaritySearch', debouncedQuery],
+        queryFn: () => similaritySearch(debouncedQuery),
+    })
+
   const [activeControls, setActiveControls] = useState({
     power: true,
     navigation: true,
