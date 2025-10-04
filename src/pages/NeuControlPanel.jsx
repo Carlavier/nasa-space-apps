@@ -3,41 +3,7 @@ import { Search, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, Target } fro
 import { similaritySearch } from '../services/ai/core';
 import { useQuery } from '@tanstack/react-query';
 import { debounce } from 'lodash';
-
-const samplePapers = [
-  {
-    id: '1',
-    title: 'Quantum Propulsion Systems',
-    author: 'Dr. Elena Vasquez',
-    summary: 'Revolutionary approach to faster-than-light travel using quantum entanglement principles.',
-    date: '2089.03.15',
-    planetType: 'blue'
-  },
-  {
-    id: '2',
-    title: 'Exoplanet Atmospheric Analysis',
-    author: 'Prof. Marcus Chen',
-    summary: 'Comprehensive study of potentially habitable worlds in the Kepler-442 system.',
-    date: '2089.03.12',
-    planetType: 'orange'
-  },
-  {
-    id: '3',
-    title: 'Dark Matter Navigation',
-    author: 'Dr. Sarah Kim',
-    summary: 'Utilizing dark matter currents for precision space navigation and energy harvesting.',
-    date: '2089.03.10',
-    planetType: 'purple'
-  },
-  {
-    id: '4',
-    title: 'Biological Life Support',
-    author: 'Dr. James Wright',
-    summary: 'Self-sustaining ecosystems for long-duration deep space missions.',
-    date: '2089.03.08',
-    planetType: 'teal'
-  }
-];
+import { articles } from '../constants';
 
 const hintQueries = [
   'Life on Mars',
@@ -65,10 +31,26 @@ export default function SpaceshipInteriorNeumorphic() {
         };
     }, [searchQuery]);
 
-    const { data, isLoading } = useQuery({
+    const { data: similarityResult, isLoading } = useQuery({
         queryKey: ['similaritySearch', debouncedQuery],
         queryFn: () => similaritySearch(debouncedQuery),
-    })
+    });
+
+    const [samplePapers, setSamplePapers] = useState([]);
+    useEffect(() => {
+        // setSamplePapers(similarityResult ?? []);
+        setSamplePapers((similarityResult && similarityResult.length > 0 ? similarityResult : [])
+        .map((paper) => paper[0])
+        .map((paper) => {
+            const pmcid = paper.metadata?.pmcid || '';
+            const article = articles[pmcid];
+            return {
+                id: paper.id,
+                ...Object(article)
+            };
+        }))
+    }, [similarityResult, isLoading]);
+    console.log(samplePapers);
 
   const [activeControls, setActiveControls] = useState({
     power: true,
@@ -117,6 +99,8 @@ export default function SpaceshipInteriorNeumorphic() {
     return colors[type] || colors.blue;
   };
 
+  console.log(samplePapers);
+
   return (
     <div className="w-full h-screen overflow-hidden flex flex-col bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
       {/* Main Content Area */}
@@ -130,7 +114,7 @@ export default function SpaceshipInteriorNeumorphic() {
           </div>
           
           <div className="max-h-[calc(100vh-200px)] overflow-y-auto pr-2">
-            {samplePapers.map((paper) => (
+            {samplePapers?.map((paper) => (
               <div key={paper.id} className="mb-6">
                 <div className="relative w-16 h-16 mx-auto mb-3">
                   <div className={`w-16 h-16 rounded-full bg-gradient-to-br ${getPlanetColor(paper.planetType)} shadow-lg animate-pulse`}></div>
@@ -140,9 +124,6 @@ export default function SpaceshipInteriorNeumorphic() {
                   <h3 className="text-slate-200 font-semibold mb-1 text-sm leading-tight">
                     {paper.title}
                   </h3>
-                  <p className="text-slate-400 text-xs leading-relaxed">
-                    {paper.summary.slice(0, 60)}...
-                  </p>
                 </div>
               </div>
             ))}
@@ -214,7 +195,7 @@ export default function SpaceshipInteriorNeumorphic() {
           </div>
           
           <div className="max-h-[calc(100vh-200px)] overflow-y-auto pr-2">
-            {samplePapers.slice().reverse().map((paper) => (
+            {samplePapers?.slice().reverse().map((paper) => (
               <div key={`recent-${paper.id}`} className="mb-6">
                 <div className="relative w-16 h-16 mx-auto mb-3">
                   <div className={`w-16 h-16 rounded-full bg-gradient-to-br ${getPlanetColor(paper.planetType)} shadow-lg animate-pulse`}></div>
@@ -224,9 +205,6 @@ export default function SpaceshipInteriorNeumorphic() {
                   <h3 className="text-slate-200 font-semibold mb-1 text-sm leading-tight">
                     {paper.title}
                   </h3>
-                  <p className="text-slate-400 text-xs leading-relaxed">
-                    {paper.summary.slice(0, 60)}...
-                  </p>
                 </div>
               </div>
             ))}
