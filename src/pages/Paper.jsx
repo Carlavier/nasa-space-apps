@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { ChevronUp, ChevronDown, ChevronLeft, ChevronRight, Target, ArrowLeft, Send, Play } from 'lucide-react';
+import { articles } from '../constants';
 
 const samplePaper = {
     id: '1',
@@ -11,6 +12,9 @@ const samplePaper = {
     snippet: 'Our research demonstrates that by manipulating quantum entangled particles across vast distances, we can create a propulsion field that appears to violate traditional speed limitations. The key breakthrough involves maintaining quantum coherence at macroscopic scales through advanced cryogenic shielding and electromagnetic field manipulation.',
     explanation: 'This experiment showcases a revolutionary quantum propulsion system that could fundamentally change space travel. By leveraging quantum entanglement - a phenomenon where particles remain connected regardless of distance - the researchers have created a propulsion mechanism that bypasses conventional thrust limitations. The video demonstration shows the quantum field generator maintaining stable entanglement at room temperature, a feat previously thought impossible.'
 };
+
+const pmcid = 'PMC4136787'; // Example PMCID for fetching paper data
+const article = articles['PMC4136787']; // Example PMCID for fetching paper data
 
 const relatedPapers = [
     {
