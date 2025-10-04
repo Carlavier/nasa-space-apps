@@ -1,7 +1,12 @@
+import { Sidebar } from "../components/sidebar"
+
 const Home = () => {
   return (
     <>
-      <h1>Hi</h1>
+      <div className="w-full h-full ">
+        <Sidebar />
+        {/* <h1 className="underline">Hi</h1> */}
+      </div>
     </>
   )
 }

@@ -9,13 +9,13 @@ function App() {
   const [count, setCount] = useState(0)
 
   return (
-    <>
+    <div className='p-0 m-0 w-screen h-screen'>
       <Router>
         <Routes>
           <Route path="/" element={<Home />} />
         </Routes>
       </Router>
-    </>
+    </div>
   )
 }
 
