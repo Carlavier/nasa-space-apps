@@ -4,6 +4,7 @@ import { similaritySearch } from '../services/ai/core';
 import { useQuery } from '@tanstack/react-query';
 import { debounce } from 'lodash';
 import { articles } from '../constants';
+import { SpaceshipWindow } from '../components/SpaceshipWindow';
 
 const hintQueries = [
   'Life on Mars',
@@ -17,40 +18,40 @@ const hintQueries = [
 export default function SpaceshipInteriorNeumorphic() {
   const [searchQuery, setSearchQuery] = useState('');
 
-    const [debouncedQuery, setDebouncedQuery] = useState('');
+  const [debouncedQuery, setDebouncedQuery] = useState('');
 
-    useEffect(() => {
-        const handler = debounce((query) => {
-            setDebouncedQuery(query);
-        }, 500);
+  useEffect(() => {
+    const handler = debounce((query) => {
+      setDebouncedQuery(query);
+    }, 500);
 
-        handler(searchQuery);
+    handler(searchQuery);
 
-        return () => {
-            handler.cancel();
+    return () => {
+      handler.cancel();
+    };
+  }, [searchQuery]);
+
+  const { data: similarityResult, isLoading } = useQuery({
+    queryKey: ['similaritySearch', debouncedQuery],
+    queryFn: () => similaritySearch(debouncedQuery),
+  });
+
+  const [samplePapers, setSamplePapers] = useState([]);
+  useEffect(() => {
+    // setSamplePapers(similarityResult ?? []);
+    setSamplePapers((similarityResult && similarityResult.length > 0 ? similarityResult : [])
+      .map((paper) => paper[0])
+      .map((paper) => {
+        const pmcid = paper.metadata?.pmcid || '';
+        const article = articles[pmcid];
+        return {
+          id: paper.id,
+          ...Object(article)
         };
-    }, [searchQuery]);
-
-    const { data: similarityResult, isLoading } = useQuery({
-        queryKey: ['similaritySearch', debouncedQuery],
-        queryFn: () => similaritySearch(debouncedQuery),
-    });
-
-    const [samplePapers, setSamplePapers] = useState([]);
-    useEffect(() => {
-        // setSamplePapers(similarityResult ?? []);
-        setSamplePapers((similarityResult && similarityResult.length > 0 ? similarityResult : [])
-        .map((paper) => paper[0])
-        .map((paper) => {
-            const pmcid = paper.metadata?.pmcid || '';
-            const article = articles[pmcid];
-            return {
-                id: paper.id,
-                ...Object(article)
-            };
-        }))
-    }, [similarityResult, isLoading]);
-    console.log(samplePapers);
+      }))
+  }, [similarityResult, isLoading]);
+  console.log(samplePapers);
 
   const [activeControls, setActiveControls] = useState({
     power: true,
@@ -106,19 +107,13 @@ export default function SpaceshipInteriorNeumorphic() {
       {/* Main Content Area */}
       <div className="flex-1 flex h-full">
         {/* Left Sidebar */}
-        <div className="w-1/5 bg-slate-800/50 backdrop-blur-sm p-6 border-r border-slate-700/50">
-          <div className="bg-slate-900/80 shadow-inner rounded-lg p-4 mb-6 border border-slate-700/30">
-            <h2 className="text-slate-400 uppercase tracking-wider text-sm font-semibold mb-4">
-              Research Papers
-            </h2>
-          </div>
-          
-          <div className="max-h-[calc(100vh-200px)] overflow-y-auto pr-2">
+        <div className="w-2/7 bg-slate-800/50 backdrop-blur-sm p-2 border-r border-slate-700/50">
+          <SpaceshipWindow title="VIEWPORT-01" maxContentHeight="calc(100vh - 250px)">
             {samplePapers?.map((paper) => (
               <div key={paper.id} className="mb-6">
                 <div className="relative w-16 h-16 mx-auto mb-3">
                   <div className={`w-16 h-16 rounded-full bg-gradient-to-br ${getPlanetColor(paper.planetType)} shadow-lg animate-pulse`}></div>
-                  <div className="absolute inset-0 rounded-full border-2 border-slate-500/30 animate-spin" style={{animationDuration: '8s'}}></div>
+                  <div className="absolute inset-0 rounded-full border-2 border-slate-500/30 animate-spin" style={{ animationDuration: '8s' }}></div>
                 </div>
                 <div className="text-center">
                   <h3 className="text-slate-200 font-semibold mb-1 text-sm leading-tight">
@@ -127,14 +122,14 @@ export default function SpaceshipInteriorNeumorphic() {
                 </div>
               </div>
             ))}
-          </div>
+          </SpaceshipWindow>
         </div>
 
         {/* Center Command Area */}
-        <div className="w-3/5 p-10 flex flex-col">
+        <div className="w-3/7 p-10 flex flex-col">
           <div className="text-center mb-12">
             <h1 className="text-slate-100 text-4xl font-bold tracking-wide drop-shadow-lg">
-              SPACESHIP INTERIOR
+              Begin Your Research Here
             </h1>
           </div>
 
@@ -187,19 +182,13 @@ export default function SpaceshipInteriorNeumorphic() {
         </div>
 
         {/* Right Sidebar */}
-        <div className="w-1/5 bg-slate-800/50 backdrop-blur-sm p-6 border-l border-slate-700/50">
-          <div className="bg-slate-900/80 shadow-inner rounded-lg p-4 mb-6 border border-slate-700/30">
-            <h2 className="text-slate-400 uppercase tracking-wider text-sm font-semibold mb-4">
-              Recent Studies
-            </h2>
-          </div>
-          
-          <div className="max-h-[calc(100vh-200px)] overflow-y-auto pr-2">
+        <div className="w-2/7 bg-slate-800/50 backdrop-blur-sm p-2 border-l border-slate-700/50">
+          <SpaceshipWindow title="VIEWPORT-02" className="mb-4">
             {samplePapers?.slice().reverse().map((paper) => (
               <div key={`recent-${paper.id}`} className="mb-6">
                 <div className="relative w-16 h-16 mx-auto mb-3">
                   <div className={`w-16 h-16 rounded-full bg-gradient-to-br ${getPlanetColor(paper.planetType)} shadow-lg animate-pulse`}></div>
-                  <div className="absolute inset-0 rounded-full border-2 border-slate-500/30 animate-spin" style={{animationDuration: '8s'}}></div>
+                  <div className="absolute inset-0 rounded-full border-2 border-slate-500/30 animate-spin" style={{ animationDuration: '8s' }}></div>
                 </div>
                 <div className="text-center">
                   <h3 className="text-slate-200 font-semibold mb-1 text-sm leading-tight">
@@ -208,7 +197,7 @@ export default function SpaceshipInteriorNeumorphic() {
                 </div>
               </div>
             ))}
-          </div>
+          </SpaceshipWindow>
         </div>
       </div>
 
@@ -264,15 +253,15 @@ export default function SpaceshipInteriorNeumorphic() {
                 { key: 'power', label: 'PWR' }
               ].map((knob) => (
                 <div key={knob.key} className="text-center">
-                  <button 
+                  <button
                     onClick={() => rotateKnob(knob.key)}
                     className="relative w-12 h-12 rounded-full bg-slate-700 shadow-inner border-2 border-slate-600 hover:border-slate-500 transition-colors"
                   >
-                    <div 
+                    <div
                       className="absolute top-1 left-1/2 w-1 h-4 bg-cyan-400 rounded-full shadow-lg shadow-cyan-500/50"
-                      style={{ 
+                      style={{
                         transformOrigin: 'bottom center',
-                        transform: `translateX(-50%) rotate(${knobRotations[knob.key]}deg)` 
+                        transform: `translateX(-50%) rotate(${knobRotations[knob.key]}deg)`
                       }}
                     ></div>
                   </button>
@@ -302,7 +291,7 @@ export default function SpaceshipInteriorNeumorphic() {
                 { key: 'autopilot', label: 'AUTO' }
               ].map((toggle) => (
                 <div key={toggle.key} className="flex items-center space-x-3">
-                  <button 
+                  <button
                     onClick={() => toggleSwitch(toggle.key)}
                     className={`relative w-10 h-5 rounded-full transition-colors ${toggleStates[toggle.key] ? 'bg-cyan-500' : 'bg-slate-600'}`}
                   >
