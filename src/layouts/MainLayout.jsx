@@ -1,12 +1,15 @@
-import { Outlet } from "react-router-dom"
+import { Outlet } from 'react-router-dom'
+import { Sidebar } from '../components/sidebar'
 
-export default function MainLayout() {
+export function MainLayout() {
     return (
-        <div className="flex">
-            <aside className="w-64 bg-gray-100 p-4">Sidebar</aside>
-            <main className="flex-1 p-6">
-                <Outlet /> {/* This renders child routes */}
+        <div className="flex h-screen w-full">
+            <Sidebar />
+            <main className="flex-1 overflow-auto">
+                <Outlet />
             </main>
         </div>
     )
 }
+
+export default MainLayout
