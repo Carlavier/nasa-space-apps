@@ -1,8 +1,4 @@
-import { Sidebar } from "../components/sidebar"
-import SpaceshipInterior from "./ControlPanel"
-import Dashboard from "./Dashboard"
-import SpaceshipInteriorNeumorphic from "./NeuControlPanel"
-import NewControlPanel from "./NewControllPanel"
+import SpaceshipInteriorNeumorphic from "./NewVersion"
 
 const Home = () => {
   return (
