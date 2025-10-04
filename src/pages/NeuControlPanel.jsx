@@ -48,7 +48,7 @@ const hintQueries = [
   'Dark energy'
 ];
 
-export default function SpaceshipInteriorNeumorphic() {
+export default function SpaceshipInteriorNeumorphicc() {
   const [searchQuery, setSearchQuery] = useState('');
 
     const [debouncedQuery, setDebouncedQuery] = useState('');
