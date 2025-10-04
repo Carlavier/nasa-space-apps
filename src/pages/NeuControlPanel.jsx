@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Search, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, Target } from 'lucide-react';
-import PaperDetailView from './PaperDetailView';
+import PaperDetailView from './PaperDetail';
 
 const samplePapers = [
   {
