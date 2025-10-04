@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ChevronUp, ChevronDown, ChevronLeft, ChevronRight, Target, ArrowLeft, Send, Play } from 'lucide-react';
 import { articles } from '../constants';
+import { generateResponse, similaritySearch } from '../services/ai/core';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 const samplePaper = {
     id: '1',
@@ -90,19 +92,29 @@ export default function Paper() {
         }));
     };
 
-    const handleSendMessage = () => {
+    useEffect(() => {
+        const chatContainer = document.querySelector('.flex-1.overflow-y-auto');
+        if (chatContainer) {
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+    }, [chatMessages]);
+
+    const handleSendMessage = async () => {
         if (!chatInput.trim()) return;
 
         setChatMessages(prev => [...prev, { type: 'user', text: chatInput }]);
-
-        setTimeout(() => {
-            setChatMessages(prev => [...prev, {
-                type: 'assistant',
-                text: 'This is a simulated response. In a real implementation, this would connect to an AI model to provide detailed explanations about the research paper and experimental results.'
-            }]);
-        }, 1000);
-
         setChatInput('');
+        setChatMessages(prev => [...prev, {
+            type: 'assistant',
+            text: 'Thinking...'
+        }]);
+
+        const data = await generateResponse(chatInput, pmcid);
+
+        setChatMessages(prev => {
+            prev[prev.length - 1] = { type: 'assistant', text: data.answer };
+            return [...prev];
+        });
     };
 
     const handleSampleQuestionClick = (question) => {
