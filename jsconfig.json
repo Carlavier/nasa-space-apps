@@ -3,6 +3,13 @@
     "target": "esnext",
     "module": "esnext",
     "moduleResolution": "node",
-    "lib": ["esnext", "dom"]
-  }
+    "lib": ["esnext", "dom"],
+    "jsx": "react-jsx",         // ✅ required for React syntax
+    "allowJs": true,            // ✅ ensures JS files are checked
+    "checkJs": true,            // ✅ gives you IntelliSense + warnings
+    "noEmit": true,             // ✅ don’t output compiled JS
+    "isolatedModules": true     // ✅ ensures Vite compatibility
+  },
+  "include": ["src"],           // ✅ include your code folder
+  "exclude": ["node_modules"]
 }

@@ -48,7 +48,7 @@ const hintQueries = [
   'Dark energy'
 ];
 
-export default function SpaceshipInteriorNeumorphicc() {
+export default function SpaceshipInteriorNeumorphic() {
   const [searchQuery, setSearchQuery] = useState('');
 
     const [debouncedQuery, setDebouncedQuery] = useState('');
@@ -65,7 +65,7 @@ export default function SpaceshipInteriorNeumorphicc() {
         };
     }, [searchQuery]);
 
-    const { data } = useQuery({
+    const { data, isLoading } = useQuery({
         queryKey: ['similaritySearch', debouncedQuery],
         queryFn: () => similaritySearch(debouncedQuery),
     })
@@ -185,7 +185,7 @@ export default function SpaceshipInteriorNeumorphicc() {
 
             <div className="bg-slate-900/80 shadow-inner rounded-xl p-6 min-h-[300px] border border-slate-700/50">
               <div className="text-slate-400 text-center py-20">
-                {searchQuery ? (
+                {isLoading ? (
                   <div>
                     <h3 className="text-slate-200 text-lg mb-4">
                       Searching for: "{searchQuery}"

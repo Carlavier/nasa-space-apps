@@ -1,4 +1,4 @@
-import SpaceshipInteriorNeumorphic from "./NewVersion"
+import SpaceshipInteriorNeumorphic from "./NeuControlPanel";
 
 const Home = () => {
   return (
