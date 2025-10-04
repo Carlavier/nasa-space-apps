@@ -129,13 +129,13 @@ export default function Paper() {
                     </svg>
 
                     <button
-                        className="flex items-center space-x-2 mb-6 text-slate-400 hover:text-cyan-400 transition-colors relative z-10"
+                        className="flex items-center space-x-2 mb-2 text-slate-400 hover:text-cyan-400 transition-colors relative z-10"
                     >
                         <ArrowLeft className="w-5 h-5" />
                         <span className="text-sm">Back to Command</span>
                     </button>
 
-                    <div className="bg-slate-900/80 shadow-inner rounded-lg p-4 mb-6 border border-slate-700/30 relative z-10">
+                    <div className="bg-slate-900/80 shadow-inner rounded-lg p-4 mb-2 border border-slate-700/30 relative z-10">
                         <h2 className="text-slate-400 uppercase tracking-wider text-sm font-semibold">
                             Planets from before
                         </h2>
@@ -184,9 +184,9 @@ export default function Paper() {
                 </div>
 
                 {/* Center Content Area */}
-                <div className="w-3/5 p-8 flex flex-col overflow-y-auto">
-                    <div className="mb-6">
-                        <h1 className="text-slate-100 text-3xl font-bold mb-2">
+                <div className="w-3/5 p-2 flex flex-col overflow-y-auto">
+                    <div className="mb-2">
+                        <h1 className="text-slate-100 text-xl font-bold mb-2">
                             {samplePaper.title}
                         </h1>
                         <p className="text-slate-400 text-sm">
@@ -195,11 +195,11 @@ export default function Paper() {
                     </div>
 
                     {/* Video/Experiment Section */}
-                    <div className="mb-6">
-                        <h2 className="text-slate-300 text-lg font-semibold mb-3 uppercase tracking-wide">
+                    <div className="mb-2">
+                        <h2 className="text-slate-300 text-lg font-semibold mb-1 uppercase tracking-wide">
                             Experiment Video
                         </h2>
-                        <div className="relative bg-slate-900/80 border border-slate-700/50 rounded-xl overflow-hidden shadow-inner aspect-video group">
+                        <div className="w-[30rem] m-auto relative bg-slate-900/80 border border-slate-700/50 rounded-xl overflow-hidden shadow-inner aspect-video group">
                             <div className="absolute inset-0 bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center">
                                 <div className="text-center">
                                     <div className="w-20 h-20 rounded-full bg-slate-700/50 border-2 border-slate-600 flex items-center justify-center mb-4 mx-auto group-hover:bg-cyan-500/20 group-hover:border-cyan-500 transition-all cursor-pointer">
@@ -212,26 +212,26 @@ export default function Paper() {
                     </div>
 
                     {/* Snippet from the paper */}
-                    <div className="mb-6">
-                        <h2 className="text-slate-300 text-lg font-semibold mb-3 uppercase tracking-wide">
+                    <div className="mb-2">
+                        <h2 className="text-slate-300 text-lg font-semibold mb-1 uppercase tracking-wide">
                             Snippet from the paper
                         </h2>
-                        <div className="bg-slate-900/80 border border-slate-700/50 rounded-xl p-6 shadow-inner">
-                            <p className="text-slate-300 leading-relaxed">
-                                {samplePaper.snippet}
+                        <div className="bg-slate-900/80 border border-slate-700/50 rounded-xl p-2 shadow-inner">
+                            <p className="text-slate-300 leading-relaxed text-left italic">
+                                {`"${samplePaper.snippet}"`}
                             </p>
                         </div>
                     </div>
 
                     {/* LLM Explanation */}
-                    <div className="mb-6">
-                        <h2 className="text-slate-300 text-lg font-semibold mb-3 uppercase tracking-wide">
+                    <div className="mb-2">
+                        <h2 className="text-slate-300 text-lg font-semibold mb-1 uppercase tracking-wide">
                             LLM explanation
                         </h2>
-                        <div className="bg-gradient-to-br from-cyan-900/20 to-slate-900/80 border border-cyan-700/30 rounded-xl p-6 shadow-inner">
+                        <div className="bg-gradient-to-br from-cyan-900/20 to-slate-900/80 border border-cyan-700/30 rounded-xl p-2 shadow-inner">
                             <div className="flex items-start space-x-3">
                                 <div className="w-2 h-2 rounded-full bg-cyan-400 mt-2 animate-pulse"></div>
-                                <p className="text-slate-300 leading-relaxed flex-1">
+                                <p className="text-slate-300 leading-relaxed flex-1 text-left">
                                     {samplePaper.explanation}
                                 </p>
                             </div>
@@ -268,7 +268,7 @@ export default function Paper() {
                         {/* Sample Questions */}
                         {chatMessages.length <= 1 && (
                             <div className="space-y-2 mt-6">
-                                <p className="text-slate-400 text-xs uppercase tracking-wide mb-3">
+                                <p className="text-slate-400 text-xs uppercase tracking-wide mb-1">
                                     Sample Questions:
                                 </p>
                                 {sampleQuestions.map((question, idx) => (
@@ -351,6 +351,7 @@ export default function Paper() {
                     {/* Right Section - Knobs & Controls */}
                     <div className="flex items-center justify-end space-x-6">
                         {/* Rotary Knobs */}
+                        fghjkjhgfghjk
                         <div className="flex space-x-4">
                             {[
                                 { key: 'volume', label: 'VOL' },
