@@ -138,9 +138,6 @@ export default function SpaceshipInteriorNeumorphic() {
             <h1 className="text-slate-100 text-4xl font-bold tracking-wide drop-shadow-lg">
               Begin Your Research Here
             </h1>
-            <button onClick={
-              () => { console.log(articles) }
-            }>Click me</button>
           </div>
 
           <div className="max-w-2xl mx-auto w-full">
