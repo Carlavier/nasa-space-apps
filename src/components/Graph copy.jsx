@@ -27,7 +27,7 @@ export default function PaperGraph3D({ articles, onSelect }) {
     // transform articles into graph data
     const data = useMemo(() => {
         const nodes = Object.values(articles).map(article => ({
-            id: article.pmcid,
+            id: article.pmcid || article.id, // Use pmcid as primary, fallback to id
             title: article.title,
             abstract: article.abstract,
             val: article.ref_cited_by?.length || 1,
@@ -38,10 +38,31 @@ export default function PaperGraph3D({ articles, onSelect }) {
 
         const links = Object.values(articles).flatMap(article =>
             (article.ref_cited || []).map(targetId => ({
-                source: article.id,
+                source: article.pmcid || article.id, // Use consistent ID
                 target: targetId
             }))
         ).filter(link => nodeIds.has(link.source) && nodeIds.has(link.target));
+
+        // If no links exist, create some test connections between nearby nodes
+        if (links.length === 0 && nodes.length > 1) {
+            const testLinks = [];
+            for (let i = 0; i < Math.min(nodes.length - 1, 5); i++) {
+                testLinks.push({
+                    source: nodes[i].id,
+                    target: nodes[i + 1].id
+                });
+            }
+            console.log('No citation links found, creating test links:', testLinks);
+            return { nodes, links: testLinks };
+        }
+
+        // Debug logging
+        console.log('Graph Debug Info:');
+        console.log('Nodes:', nodes.length);
+        console.log('Links before filtering:', Object.values(articles).reduce((total, article) => total + (article.ref_cited?.length || 0), 0));
+        console.log('Links after filtering:', links.length);
+        console.log('Sample links:', links.slice(0, 5));
+        console.log('Sample node IDs:', nodes.slice(0, 5).map(n => n.id));
 
         return { nodes, links };
     }, [articles]);
@@ -194,12 +215,11 @@ export default function PaperGraph3D({ articles, onSelect }) {
         </div>`
             }
             linkColor={() => "#60a5fa"}
-            linkOpacity={0.6}
-            linkWidth={2}
-            linkDirectionalParticles={1}
-            linkDirectionalParticleSpeed={0.005}
-            linkDirectionalParticleWidth={2}
-            linkDirectionalParticleColor={() => "#fbbf24"}
+            linkOpacity={0.2}
+            linkWidth={0.2}
+            linkResolution={8}
+            linkCurvature={0.1}
+            showNavInfo={false}
             onNodeClick={(node) => {
                 // pass the full article object back to parent
                 onSelect?.(articles[node.id]);

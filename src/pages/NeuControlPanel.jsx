@@ -10,12 +10,12 @@ import { useNavigate } from 'react-router';
 import PaperGraph3D from '../components/Graph';
 
 const hintQueries = [
-  'Life on Mars',
-  'Black hole physics',
-  'Exoplanet atmospheres',
-  'Quantum mechanics',
-  'Stellar formation',
-  'Dark energy'
+  'CRISPR gene editing',
+  'Synthetic biology applications',
+  'Human microbiome research',
+  'Cancer immunotherapy',
+  'Neural regeneration techniques',
+  'Bioinformatics in disease prediction'
 ];
 
 export default function SpaceshipInteriorNeumorphic() {
@@ -133,11 +133,17 @@ export default function SpaceshipInteriorNeumorphic() {
         </div>
 
         {/* Center Command Area */}
-        <div className="w-3/7 p-10 flex flex-col overflow-y-auto">
+        <div className="w-3/7 p-2 flex flex-col overflow-y-auto">
           <div className="text-center mb-12">
-            <h1 className="text-slate-100 text-4xl font-bold tracking-wide drop-shadow-lg">
-              Begin Your Research Here
+            <h1 className="text-slate-100 text-5xl font-bold tracking-wide drop-shadow-lg mb-4">
+              Enjoy Space Biology
             </h1>
+            <h2 className="text-slate-300 text-lg font-medium mb-3 tracking-wide">
+              Made by ObitoEcos Team
+            </h2>
+            <p className="text-slate-400 text-base italic font-light tracking-wider">
+              Read Less, Understand Right
+            </p>
           </div>
 
           <div className="max-w-2xl mx-auto w-full">
@@ -301,8 +307,8 @@ export default function SpaceshipInteriorNeumorphic() {
             {/* Toggle Switches */}
             <div className="flex flex-col space-y-3">
               {[
-                { key: 'comms', label: 'COM' },
-                { key: 'autopilot', label: 'AUTO' }
+                // { key: 'comms', label: 'COM' },
+                // { key: 'autopilot', label: 'AUTO' }
               ].map((toggle) => (
                 <div key={toggle.key} className="flex items-center space-x-3">
                   <button
