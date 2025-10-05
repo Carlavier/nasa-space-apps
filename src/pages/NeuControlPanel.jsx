@@ -139,7 +139,7 @@ export default function SpaceshipInteriorNeumorphic() {
               Enjoy Space Biology
             </h1>
             <h2 className="text-slate-300 text-lg font-medium mb-3 tracking-wide">
-              Made by ObitoEcos Team
+              Orbital Echoes
             </h2>
             <p className="text-slate-400 text-base italic font-light tracking-wider">
               Read Less, Understand Right

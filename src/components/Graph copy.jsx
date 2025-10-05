@@ -4,12 +4,12 @@ import ForceGraph3D from "react-force-graph-3d";
 import * as THREE from "three";
 
 const COLORS = [
-    "#3b82f6", // blue
-    "#a855f7", // purple
-    "#10b981", // green
-    "#f59e0b", // amber
-    "#ef4444", // red
-    "#14b8a6", // teal
+  "#6b7280", // muted blue-gray
+  "#7c3aed", // muted violet
+  "#4b5563", // dark slate (muted green-gray)
+  "#b45309", // burnt amber
+  "#9f1239", // muted red
+  "#0f766e", // deep muted teal
 ];
 
 // simple string hash to choose color
