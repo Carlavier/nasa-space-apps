@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react';
 import { ChevronUp, ChevronDown, ChevronLeft, ChevronRight, Target, ArrowLeft, Send, Play } from 'lucide-react';
-import { articles } from '../constants';
 import { generateResponse } from '../services/ai/core';
-
-const pmcid = 'PMC4136787'; // Example PMCID for fetching paper data
-const article = articles['PMC4136787']; // Example PMCID for fetching paper data
+import { useAppContext } from '../context/useAppContext';
+import { articles } from '../constants';
+import { useParams } from 'react-router';
 
 const relatedPapers = [
     {
@@ -34,15 +33,18 @@ const sampleQuestions = [
 ];
 
 export default function Paper() {
+    const { pcmid } = useParams();
+
+    const article = articles[pcmid];
+
     const [articleSnippet, setArticleSnippet] = useState("Loading...");
     const [articleExplanation, setArticleExplanation] = useState("Loading...");
-    console.log(articleSnippet, articleExplanation);
 
     useEffect(() => {
         async function loadArticle() {
             try {
-                const snippet = await generateResponse("Provide a concise snippet from the paper.", pmcid, 'terminology');
-                const explanation = await generateResponse("Explain the significance of this research in simple terms.", pmcid, 'terminology');
+                const snippet = await generateResponse("Provide a concise snippet from the paper.", pcmid, 'terminology');
+                const explanation = await generateResponse("Explain the significance of this research in simple terms.", pcmid, 'terminology');
                 setArticleSnippet(snippet.definition);
                 setArticleExplanation(explanation.definition);
             } catch (error) {
@@ -115,7 +117,7 @@ export default function Paper() {
             text: 'Thinking...'
         }]);
 
-        const data = await generateResponse(chatInput, pmcid);
+        const data = await generateResponse(chatInput, pcmid);
 
         setChatMessages(prev => {
             prev[prev.length - 1] = { type: 'assistant', text: data.answer };
@@ -244,7 +246,7 @@ export default function Paper() {
                     {/* LLM Explanation */}
                     <div className="mb-2">
                         <h2 className="text-slate-300 text-lg font-semibold mb-1 uppercase tracking-wide">
-                            LLM explanation
+                            Explanation
                         </h2>
                         <div className="bg-gradient-to-br from-cyan-900/20 to-slate-900/80 border border-cyan-700/30 rounded-xl p-2 shadow-inner">
                             <div className="flex items-start space-x-3">
