@@ -5,6 +5,8 @@ import { useQuery } from '@tanstack/react-query';
 import { debounce } from 'lodash';
 import { articles } from '../constants';
 import { SpaceshipWindow } from '../components/SpaceshipWindow';
+import { useAppContext } from '../context/useAppContext';
+import { useNavigate } from 'react-router';
 
 const hintQueries = [
   'Life on Mars',
@@ -17,6 +19,7 @@ const hintQueries = [
 
 export default function SpaceshipInteriorNeumorphic() {
   const [searchQuery, setSearchQuery] = useState('');
+  const { setCurrentArticleId } = useAppContext();
 
   const [debouncedQuery, setDebouncedQuery] = useState('');
 
@@ -51,7 +54,6 @@ export default function SpaceshipInteriorNeumorphic() {
         };
       }))
   }, [similarityResult, isLoading]);
-  console.log(samplePapers);
 
   const [activeControls, setActiveControls] = useState({
     power: true,
@@ -100,7 +102,11 @@ export default function SpaceshipInteriorNeumorphic() {
     return colors[type] || colors.blue;
   };
 
-  console.log(samplePapers);
+const navigate = useNavigate();
+
+  function redirectToPaper(paperId) {
+    navigate(`/papers/${paperId}`);
+  }
 
   return (
     <div className="w-full h-screen overflow-hidden flex flex-col bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
@@ -110,7 +116,7 @@ export default function SpaceshipInteriorNeumorphic() {
         <div className="w-2/7 bg-slate-800/50 backdrop-blur-sm p-2 border-r border-slate-700/50">
           <SpaceshipWindow title="VIEWPORT-01" maxContentHeight="calc(100vh - 250px)">
             {samplePapers?.map((paper) => (
-              <div key={paper.id} className="mb-6">
+              <div key={paper.id} className="mb-6 cursor-pointer" onClick={() => redirectToPaper(paper.pmcid)}>
                 <div className="relative w-16 h-16 mx-auto mb-3">
                   <div className={`w-16 h-16 rounded-full bg-gradient-to-br ${getPlanetColor(paper.planetType)} shadow-lg animate-pulse`}></div>
                   <div className="absolute inset-0 rounded-full border-2 border-slate-500/30 animate-spin" style={{ animationDuration: '8s' }}></div>
@@ -188,7 +194,7 @@ export default function SpaceshipInteriorNeumorphic() {
         <div className="w-2/7 bg-slate-800/50 backdrop-blur-sm p-2 border-l border-slate-700/50">
           <SpaceshipWindow title="VIEWPORT-02" className="mb-4">
             {samplePapers?.slice().reverse().map((paper) => (
-              <div key={`recent-${paper.id}`} className="mb-6">
+              <div key={`recent-${paper.id}`} className="mb-6 cursor-pointer" onClick={() => redirectToPaper(paper.pmcid)}>
                 <div className="relative w-16 h-16 mx-auto mb-3">
                   <div className={`w-16 h-16 rounded-full bg-gradient-to-br ${getPlanetColor(paper.planetType)} shadow-lg animate-pulse`}></div>
                   <div className="absolute inset-0 rounded-full border-2 border-slate-500/30 animate-spin" style={{ animationDuration: '8s' }}></div>
