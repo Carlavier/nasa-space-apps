@@ -6,7 +6,7 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
-    host: true,
-    allowedHosts: 'all'
+    host: '0.0.0.0',
+    allowedHosts: ['https://nasa-space-apps-x6w9.onrender.com']
   }
 })
