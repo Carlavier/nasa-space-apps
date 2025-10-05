@@ -1,30 +1,8 @@
 import { useEffect, useState } from 'react';
 import { ChevronUp, ChevronDown, ChevronLeft, ChevronRight, Target, ArrowLeft, Send, Play } from 'lucide-react';
 import { generateResponse } from '../services/ai/core';
-import { useAppContext } from '../context/useAppContext';
 import { articles } from '../constants';
-import { useParams } from 'react-router';
-
-const relatedPapers = [
-    {
-        id: '1',
-        title: 'Quantum Propulsion Systems',
-        planetType: 'blue',
-        summary: 'Revolutionary approach to faster-than-light travel using quantum entanglement principles.'
-    },
-    {
-        id: '2',
-        title: 'Exoplanet Atmospheric Analysis',
-        planetType: 'orange',
-        summary: 'Comprehensive study of potentially habitable worlds in the Kepler-442 system.'
-    },
-    {
-        id: '3',
-        title: 'Dark Matter Navigation',
-        planetType: 'purple',
-        summary: 'Utilizing dark matter currents for precision space navigation and energy harvesting.'
-    }
-];
+import { useNavigate, useParams } from 'react-router';
 
 const sampleQuestions = [
     'What is the main focus of this research?',
@@ -32,10 +10,33 @@ const sampleQuestions = [
     'What are the potential applications of this study?'
 ];
 
+const planetTypes = [
+    'blue', 'orange', 'purple', 'teal', 'red', 'green', 'yellow', 'pink', 'indigo', 'cyan',
+    'lime', 'amber', 'violet', 'fuchsia', 'rose', 'emerald', 'sky', 'slate', 'stone', 'zinc',
+    'neutral', 'gray', 'warmGray', 'trueGray', 'coolGray', 'deepPurple', 'lightBlue', 'deepOrange', 'lightGreen', 'brown',
+    'gold', 'silver', 'bronze', 'magenta', 'turquoise', 'coral', 'peach', 'mint', 'lavender', 'apricot'
+];
+
 export default function Paper() {
     const { pcmid } = useParams();
 
     const article = articles[pcmid];
+    const relatedPapers = article.ref_cited.map((id, index) => {
+        const curArticles = articles[id];
+        // Use a seeded color based on the paper id for consistent planetType
+        function seededRandom(seed) {
+            let x = Math.sin(seed) * 10000;
+            return x - Math.floor(x);
+        }
+        const planetType = planetTypes[Math.floor(seededRandom(index) * planetTypes.length)];
+        return {
+            id: curArticles.pmcid,
+            title: curArticles.title,
+            planetType,
+            summary: curArticles.abstract
+        }
+    });
+    console.log(relatedPapers);
 
     const [articleSnippet, setArticleSnippet] = useState("Loading...");
     const [articleExplanation, setArticleExplanation] = useState("Loading...");
@@ -78,10 +79,46 @@ export default function Paper() {
 
     const getPlanetColor = (type) => {
         const colors = {
-            blue: 'from-blue-400 to-blue-600',
-            orange: 'from-orange-400 to-orange-600',
-            purple: 'from-purple-400 to-purple-600',
-            teal: 'from-teal-400 to-teal-600'
+            blue: "from-blue-400 via-blue-600 to-blue-900",
+            orange: "from-orange-400 via-orange-600 to-orange-900",
+            purple: "from-purple-400 via-purple-600 to-purple-900",
+            teal: "from-teal-400 via-teal-600 to-teal-900",
+            red: "from-red-400 via-red-600 to-red-900",
+            green: "from-green-400 via-green-600 to-green-900",
+            yellow: "from-yellow-300 via-yellow-500 to-yellow-700",
+            pink: "from-pink-400 via-pink-600 to-pink-900",
+            indigo: "from-indigo-400 via-indigo-600 to-indigo-900",
+            cyan: "from-cyan-400 via-cyan-600 to-cyan-900",
+            lime: "from-lime-400 via-lime-600 to-lime-900",
+            amber: "from-amber-400 via-amber-600 to-amber-900",
+            violet: "from-violet-400 via-violet-600 to-violet-900",
+            fuchsia: "from-fuchsia-400 via-fuchsia-600 to-fuchsia-900",
+            rose: "from-rose-400 via-rose-600 to-rose-900",
+            emerald: "from-emerald-400 via-emerald-600 to-emerald-900",
+            sky: "from-sky-400 via-sky-600 to-sky-900",
+            slate: "from-slate-400 via-slate-600 to-slate-900",
+            stone: "from-stone-400 via-stone-600 to-stone-900",
+            zinc: "from-zinc-400 via-zinc-600 to-zinc-900",
+            neutral: "from-neutral-400 via-neutral-600 to-neutral-900",
+            gray: "from-gray-400 via-gray-600 to-gray-900",
+            warmGray: "from-warmGray-400 via-warmGray-600 to-warmGray-900",
+            trueGray: "from-trueGray-400 via-trueGray-600 to-trueGray-900",
+            coolGray: "from-coolGray-400 via-coolGray-600 to-coolGray-900",
+            deepPurple: "from-purple-500 via-purple-700 to-purple-900",
+            lightBlue: "from-blue-300 via-blue-400 to-blue-600",
+            deepOrange: "from-orange-500 via-orange-700 to-orange-900",
+            lightGreen: "from-green-300 via-green-400 to-green-600",
+            brown: "from-yellow-900 via-yellow-800 to-yellow-700",
+            gold: "from-yellow-400 via-yellow-500 to-yellow-700",
+            silver: "from-gray-300 via-gray-400 to-gray-500",
+            bronze: "from-yellow-800 via-yellow-900 to-yellow-700",
+            magenta: "from-pink-500 via-pink-700 to-pink-900",
+            turquoise: "from-teal-300 via-teal-400 to-teal-600",
+            coral: "from-orange-300 via-orange-400 to-orange-600",
+            peach: "from-orange-200 via-orange-300 to-orange-400",
+            mint: "from-green-200 via-green-300 to-green-400",
+            lavender: "from-purple-200 via-purple-300 to-purple-400",
+            apricot: "from-orange-200 via-orange-300 to-orange-400"
         };
         return colors[type] || colors.blue;
     };
@@ -129,6 +166,8 @@ export default function Paper() {
         setChatInput(question);
     };
 
+    const navigate = useNavigate();
+
     return (
         <div className="w-full h-screen overflow-hidden flex flex-col bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
             {/* Main Content Area */}
@@ -150,6 +189,7 @@ export default function Paper() {
 
                     <button
                         className="flex items-center space-x-2 mb-2 text-slate-400 hover:text-cyan-400 transition-colors relative z-10"
+                        onClick={() => navigate(-1)}
                     >
                         <ArrowLeft className="w-5 h-5" />
                         <span className="text-sm">Back to Command</span>
@@ -157,54 +197,83 @@ export default function Paper() {
 
                     <div className="bg-slate-900/80 shadow-inner rounded-lg p-4 mb-2 border border-slate-700/30 relative z-10">
                         <h2 className="text-slate-400 uppercase tracking-wider text-sm font-semibold">
-                            Planets from before
+                            Related Planets
                         </h2>
                     </div>
-
-                    {/* Planets positioned along circular arc */}
-                    <div className="relative h-[calc(100vh-250px)] z-10">
-                        {relatedPapers.map((paper, index) => {
-                            // Calculate positions along the circle arc
-                            const angle = 180 + (index * 40); // Start from left, spread 40 degrees apart
-                            const radius = 220;
-                            const centerX = 60;
-                            const centerY = 300;
-                            const x = centerX + radius * Math.cos((angle * Math.PI) / 180);
-                            const y = centerY + radius * Math.sin((angle * Math.PI) / 180);
-
-                            return (
+                    {/* <div className="bg-slate-900/80 shadow-inner rounded-lg p-4 mb-2 border border-slate-700/30 relative z-10">
+                        <div className="space-y-4 max-h-48vh overflow-y-auto custom-scrollbar">
+                            {relatedPapers.map((paper) => (
                                 <div
                                     key={paper.id}
-                                    className="absolute"
-                                    style={{
-                                        left: `${x - 32}px`,
-                                        top: `${y - 32}px`
-                                    }}
+                                    className="bg-slate-900/80 shadow-inner rounded-lg p-4 border border-slate-700/30"
                                 >
-                                    <div
-                                        className="relative w-16 h-16 cursor-pointer"
-                                        onMouseEnter={() => setHoveredPlanet(paper.id)}
-                                        onMouseLeave={() => setHoveredPlanet(null)}
-                                    >
-                                        <div className={`w-16 h-16 rounded-full bg-gradient-to-br ${getPlanetColor(paper.planetType)} shadow-lg ${article.id === paper.id ? 'ring-4 ring-cyan-400 ring-opacity-50' : 'hover:scale-110'} transition-all duration-300`}></div>
-                                        <div className="absolute inset-0 rounded-full border-2 border-slate-500/30 animate-spin" style={{ animationDuration: '8s' }}></div>
-
-                                        {/* Hover tooltip */}
-                                        {hoveredPlanet === paper.id && (
-                                            <div className="absolute left-20 top-0 w-48 bg-slate-900/95 border border-slate-700 rounded-lg p-3 shadow-xl z-50">
-                                                <h4 className="text-slate-200 font-semibold text-xs mb-1">{paper.title}</h4>
-                                                <p className="text-slate-400 text-xs">{paper.summary.slice(0, 80)}...</p>
-                                            </div>
-                                        )}
-                                    </div>
+                                    <h3 className="text-slate-200 font-semibold text-sm">{paper.title}</h3>
+                                    <p className="text-slate-400 text-xs">{paper.summary.slice(0, 60)}...</p>
                                 </div>
-                            );
-                        })}
+                            ))}
+                        </div>
+                    </div> */}
+
+                    <div>
+                        <div
+                            className="relative h-[calc(100vh-300px)] z-10 w-[100%]"
+                            style={{
+                                display: 'flex',
+                            }}
+                        >
+                            {/* Rotating container */}
+                            <div
+                                style={{
+                                    width: "100%",
+                                    animationDuration: '20s',
+                                    animationTimingFunction: 'linear',
+                                    animationIterationCount: 'infinite',
+                                    transformOrigin: 'center center', // full circular rotation
+                                    height: '0px', // no need to define area
+                                }}
+                            >
+                                {relatedPapers.map((paper) => {
+                                    return (
+                                        <div
+                                            className='w-[100%]'
+                                            key={paper.id}
+                                        >
+                                            <div
+                                                className="relative w-16 h-16 cursor-pointer mt-4 w-[100%]"
+                                                onMouseEnter={() => setHoveredPlanet(paper.id)}
+                                                onMouseLeave={() => setHoveredPlanet(null)}
+                                            >
+                                                <div
+                                                    className={`w-16 h-16 rounded-full bg-gradient-to-br ${getPlanetColor(
+                                                        paper.planetType
+                                                    )} shadow-lg ${article.id === paper.id
+                                                        ? 'ring-4 ring-cyan-400 ring-opacity-50'
+                                                        : 'hover:scale-110'
+                                                        } transition-all duration-300`}
+                                                ></div>
+
+                                                {/* Tooltip */}
+                                                {hoveredPlanet === paper.id && (
+                                                    <div className="absolute left-20 top-0 w-[calc(100%-64px)] bg-slate-900/95 border border-slate-700 rounded-lg p-3 shadow-xl z-[9999]">
+                                                        <h4 className="text-slate-200 font-semibold text-xs mb-1">
+                                                            {paper.title}
+                                                        </h4>
+                                                        <p className="text-slate-400 text-xs font-light">
+                                                            {paper.summary.slice(0, 80)}...
+                                                        </p>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 {/* Center Content Area */}
-                <div className="w-3/5 p-2 flex flex-col overflow-y-auto">
+                <div className="w-3/5 p-2 flex flex-col overflow-y-auto" >
                     <div className="mb-2">
                         <h1 className="text-slate-100 text-xl font-bold mb-2">
                             {article.title}
@@ -257,6 +326,17 @@ export default function Paper() {
                             </div>
                         </div>
                     </div>
+                    <a
+                        href={article.pdf_download_link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="fixed top-24 left-3/4 -translate-x-1/2 bg-cyan-600 hover:bg-cyan-500 text-white rounded-full px-4 py-2 flex items-center space-x-2 shadow-lg border border-cyan-400/50 hover:scale-105 transform transition-all"
+                        title="Download PDF"
+                    >
+                        <div style={{ color: "white" }}>
+                            Download PDF
+                        </div>
+                    </a>
                 </div>
 
                 {/* Right Sidebar - Floating LLM Chat Bot */}
@@ -276,8 +356,8 @@ export default function Paper() {
                             >
                                 <div
                                     className={`max-w-[85%] rounded-lg p-3 ${msg.type === 'user'
-                                            ? 'bg-cyan-600/80 text-white'
-                                            : 'bg-slate-700/80 text-slate-200'
+                                        ? 'bg-cyan-600/80 text-white'
+                                        : 'bg-slate-700/80 text-slate-200'
                                         }`}
                                 >
                                     <p className="text-sm leading-relaxed">{msg.text}</p>
