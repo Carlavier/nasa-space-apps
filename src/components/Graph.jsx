@@ -27,7 +27,7 @@ export default function PaperGraph3D({ articles, onSelect }) {
     // transform articles into graph data
     const data = useMemo(() => {
         const nodes = Object.values(articles).map(article => ({
-            id: article.id,
+            id: article.pmcid,
             title: article.title,
             abstract: article.abstract,
             val: article.ref_cited_by?.length || 1,
@@ -51,8 +51,25 @@ export default function PaperGraph3D({ articles, onSelect }) {
             ref={fgRef}
             graphData={data}
             backgroundColor="#0a0e1a"
+            // Force simulation settings to bring nodes closer
+            d3AlphaDecay={1}
+            d3VelocityDecay={0.2}
+            // Cooling settings for faster convergence
+            cooldownTicks={200}
+            cooldownTime={10000}
+            // Configure forces when engine starts
+            onEngineTick={() => {
+                if (fgRef.current && fgRef.current.d3Force) {
+                    // Set charge force to be less repulsive (brings nodes closer)
+                    fgRef.current.d3Force('charge').strength(-50);
+                    // Set link distance to be shorter
+                    fgRef.current.d3Force('link').distance(25).strength(0.8);
+                }
+            }}
             nodeThreeObject={(node) => {
-                const geometry = new THREE.SphereGeometry(node.size, 32, 32);
+                // Use val for size, with minimum size of 2 and max of 8
+                const nodeSize = Math.max(2, Math.min(8, (node.val || 1) * 0.5));
+                const geometry = new THREE.SphereGeometry(nodeSize, 16, 16);
                 const material = new THREE.MeshStandardMaterial({
                     color: node.color,
                     emissive: "#141824",
@@ -67,9 +84,13 @@ export default function PaperGraph3D({ articles, onSelect }) {
           <small>${node.abstract}</small>
         </div>`
             }
-            linkColor={() => "#3b82f6"}
-            linkOpacity={0.4}
-            linkWidth={1}
+            linkColor={() => "#60a5fa"}
+            linkOpacity={0.6}
+            linkWidth={2}
+            linkDirectionalParticles={1}
+            linkDirectionalParticleSpeed={0.005}
+            linkDirectionalParticleWidth={2}
+            linkDirectionalParticleColor={() => "#fbbf24"}
             onNodeClick={(node) => {
                 // pass the full article object back to parent
                 onSelect?.(articles[node.id]);

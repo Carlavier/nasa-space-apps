@@ -7,6 +7,7 @@ import { articles } from '../constants';
 import { SpaceshipWindow } from '../components/SpaceshipWindow';
 import { useAppContext } from '../context/useAppContext';
 import { useNavigate } from 'react-router';
+import PaperGraph3D from '../components/Graph';
 
 const hintQueries = [
   'Life on Mars',
@@ -102,19 +103,19 @@ export default function SpaceshipInteriorNeumorphic() {
     return colors[type] || colors.blue;
   };
 
-const navigate = useNavigate();
+  const navigate = useNavigate();
 
   function redirectToPaper(paperId) {
     navigate(`/papers/${paperId}`);
   }
 
   return (
-    <div className="w-full h-screen overflow-hidden flex flex-col bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+    <div className="w-full min-h-screen flex flex-col bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
       {/* Main Content Area */}
-      <div className="flex-1 flex h-full">
+      <div className="flex-1 flex min-h-0">
         {/* Left Sidebar */}
-        <div className="w-2/7 bg-slate-800/50 backdrop-blur-sm p-2 border-r border-slate-700/50">
-          <SpaceshipWindow title="VIEWPORT-01" maxContentHeight="calc(100vh - 250px)">
+        <div className="w-2/7 bg-slate-800/50 backdrop-blur-sm p-2 border-r border-slate-700/50 overflow-y-auto">
+          <SpaceshipWindow title="VIEWPORT-01" maxContentHeight="none" className="h-full">
             {samplePapers?.map((paper) => (
               <div key={paper.id} className="mb-6 cursor-pointer" onClick={() => redirectToPaper(paper.pmcid)}>
                 <div className="relative w-16 h-16 mx-auto mb-3">
@@ -132,7 +133,7 @@ const navigate = useNavigate();
         </div>
 
         {/* Center Command Area */}
-        <div className="w-3/7 p-10 flex flex-col">
+        <div className="w-3/7 p-10 flex flex-col overflow-y-auto">
           <div className="text-center mb-12">
             <h1 className="text-slate-100 text-4xl font-bold tracking-wide drop-shadow-lg">
               Begin Your Research Here
@@ -168,18 +169,18 @@ const navigate = useNavigate();
               ))}
             </div>
 
-            <div className="bg-slate-900/80 shadow-inner rounded-xl p-6 min-h-[300px] border border-slate-700/50">
-              <div className="text-slate-400 text-center py-20">
+            <div className="bg-slate-900/80 shadow-inner rounded-xl p-6 h-[150px] border border-slate-700/50">
+              <div className="text-slate-400 text-center py-2">
                 {isLoading ? (
                   <div>
-                    <h3 className="text-slate-200 text-lg mb-4">
+                    <h3 className="text-slate-200 text-lg mb-2">
                       Searching for: "{searchQuery}"
                     </h3>
                     <p>Advanced quantum search algorithms processing...</p>
                   </div>
                 ) : (
                   <div>
-                    <h3 className="text-slate-200 text-lg mb-4">
+                    <h3 className="text-slate-200 text-lg mb-2">
                       Command Interface Ready
                     </h3>
                     <p>Enter a search query or select a research topic to begin exploration.</p>
@@ -191,8 +192,8 @@ const navigate = useNavigate();
         </div>
 
         {/* Right Sidebar */}
-        <div className="w-2/7 bg-slate-800/50 backdrop-blur-sm p-2 border-l border-slate-700/50">
-          <SpaceshipWindow title="VIEWPORT-02" className="mb-4">
+        <div className="w-2/7 bg-slate-800/50 backdrop-blur-sm p-2 border-l border-slate-700/50 overflow-y-auto">
+          <SpaceshipWindow title="VIEWPORT-02" className="mb-4 h-full" maxContentHeight="none">
             {samplePapers?.slice().reverse().map((paper) => (
               <div key={`recent-${paper.id}`} className="mb-6 cursor-pointer" onClick={() => redirectToPaper(paper.pmcid)}>
                 <div className="relative w-16 h-16 mx-auto mb-3">
@@ -208,6 +209,13 @@ const navigate = useNavigate();
             ))}
           </SpaceshipWindow>
         </div>
+      </div>
+
+      <div className="w-[100%] mx-auto mb-4">
+        <PaperGraph3D articles={articles} onSelect={(article) => {
+          navigate(`/papers/${article.pmcid}`);
+          console.log(article.pmcid)
+        }} />
       </div>
 
       {/* Enhanced Control Panel Footer */}
