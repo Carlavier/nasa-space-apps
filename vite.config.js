@@ -7,5 +7,6 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
     host: '0.0.0.0',
+    allowedHost: ['nasa-space-apps-x6w9.onrender.com']
   }
 })
